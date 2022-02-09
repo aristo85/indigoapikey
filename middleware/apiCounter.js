@@ -21,15 +21,12 @@ exports.apiCounter = async (req, res, next) => {
   //   });
 
   try {
-    if (!type) {
-      const error = new Error("unknown route");
-      throw error;
-    }
-    await axios.patch(`${config.apiTracker}/users/api-tracker`, {
-      type,
-      route: { method: req.method, path },
-      accessKey: config.accessKey,
-    });
+    type &&
+      (await axios.patch(`${config.apiTracker}/users/api-tracker`, {
+        type,
+        route: { method: req.method, path },
+        accessKey: config.accessKey,
+      }));
     return next();
   } catch (error) {
     error.statusCode = error.statusCode ?? 500;
