@@ -7,37 +7,14 @@ const arthingRouts = require("./routes/arthingRouts");
 
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "API-KEYS",
-      version: "1.0.0",
-      description: "An API tracker",
-    },
-    servers: [
-      {
-        url: "http://localhost:8080",
-      },
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
-  },
+const { apiCounter } = require("./middleware/apiCounter");
+const { swaggerOptions } = require("./util/swagger");
 
-  apis: ["./routes/*.js"],
-};
-
-const specs = swaggerJsDoc(options);
+const specs = swaggerJsDoc(swaggerOptions);
 
 const app = express();
 
+// swagger
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(bodyParser.json());
@@ -48,7 +25,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/private", privateRoutes);
+/** api inspector */
+app.use((req, res, next) => {
+  apiCounter(req, res, next);
+});
+
+// rooutes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/arthing", arthingRouts);
@@ -61,10 +43,10 @@ app.use((error, req, res, next) => {
 });
 
 // Establishing the port
-const PORT = process.env.PORT ||8080;
+const PORT = process.env.PORT || 8080;
 
 mongoConnect(() => {
-  app.listen((PORT), () => {
+  app.listen(PORT, () => {
     console.log(`starting server at ${PORT}`);
   });
 });
