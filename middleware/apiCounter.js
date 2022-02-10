@@ -26,7 +26,7 @@ exports.apiCounter = async (req, res, next) => {
         type,
         route: { method: req.method, path },
         accessKey: config.accessKey,
-        accessKey: config.accountId,
+        accountId: config.accountId,
     }));
     return next();
   } catch (error) {
