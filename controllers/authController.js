@@ -31,7 +31,7 @@ exports.singup = async (req, res, next) => {
         userId: result._id,
       },
       config.jwtSecret,
-      { expiresIn: "1h" }
+      { expiresIn: "24h" }
     );
     res.status(201).json({ message: "User created", token });
   } catch (error) {

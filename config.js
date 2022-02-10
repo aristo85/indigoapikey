@@ -3,4 +3,5 @@ exports.config = {
   jwtSecret: process.env.JWT_SECRET ?? "secret",
   apiTracker: process.env.API_TRACKER ?? "",
   accessKey: process.env.ACCESS_KEY ?? "",
+  accountId: process.env.ACCOUNT_ID ?? "",
 };
