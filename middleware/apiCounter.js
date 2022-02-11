@@ -12,7 +12,7 @@ const getRoute = (req) => {
 
 exports.apiCounter = async (req, res, next) => {
   const path = req.originalUrl;
-  //   const path = req.route && req.route.path;
+  const method = req.method;
   const type = path.includes("/users") ? 1 : path.includes("/arthing") && 2;
 
   //   res.on("finish", () => {
@@ -22,12 +22,13 @@ exports.apiCounter = async (req, res, next) => {
 
   try {
     type &&
+      method !== "OPTIONS" &&
       (await axios.patch(`${config.apiTracker}/users/api-tracker`, {
         type,
-        route: { method: req.method, path },
+        route: { method, path },
         accessKey: config.accessKey,
         accountId: config.accountId,
-    }));
+      }));
     return next();
   } catch (error) {
     error.statusCode = error.statusCode ?? 500;
